@@ -11,8 +11,8 @@ int main(void)
     SetBlockBitmap(3);
     SetBlockBitmap(6);
     ResetBlockBitmap(6);
-
-    //GetInode(0, pInode)
+    Inode *pInode;
+    GetInode(0, pInode);
     return 0;
 }
 // main(void)
