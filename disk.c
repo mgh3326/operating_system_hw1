@@ -10,12 +10,12 @@
 
 int fd;
 
-void DevCreateDisk(void)
+void DevCreateDisk(void) //가상 디스크를 생성하는 함수. 이미 가상 디스크가 존재한다면 삭제하고 다시 생성시킴.
 {
     fd = open("MY_DISK", O_RDWR | O_CREAT | O_TRUNC, 0644);
 }
 
-void DevOpenDisk(void)
+void DevOpenDisk(void) //가상 디스크를 생성하지는 않고 단지 open하는 함수. 이전에 저장된 내용을 그대로 저장하고 있음.
 {
     fd = open("MY_DISK", O_RDWR);
 }

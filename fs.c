@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include "fs.h"
-
+#include "disk.h" //이거 추가하면 될라나
 void FileSysInit(void)
 {
+    printf("Block Size : %d\n", BLOCK_SIZE);
+    // malloc(BLOCK_SIZE);
+    DevCreateDisk();
+    // DevReadBlock(1, 1);
+    printf("DevCreateDisk() 실행\n");
 }
 void SetInodeBitmap(int blkno)
 {

@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include "fs.h"
 
-void main(void)
+int main(void)
 {
+    printf("Start OK\n");
+    int blkno, inodeno;
+    FileSysInit();
+    return 0;
 }
 // main(void)
 // {
