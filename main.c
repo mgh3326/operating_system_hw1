@@ -13,3 +13,10 @@ main(void)
   SetBlockBitmap(blkno);
   ...
 }
+
+Inode = pInode;
+pInode=malloc(sizeof(Inode));
+GetInode(5,pInode);
+pInode0->allocBolcks=();
+pInode0->blockPointer[0]=10;
+putInode(5,pInode);
