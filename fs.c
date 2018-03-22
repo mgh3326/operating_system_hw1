@@ -1,13 +1,37 @@
-// 구현 해야할 함수들
-// FileSysInit, SetInodeBitmap, ResetInodeBitmap,SetBlockBitmap, ResetBlockBitmap, PutInode, GetInode, GetFreeInodeNum, GetFreeBlockNum
-#include "fat.h"
+#include <stdio.h>
+#include "fs.h"
 
-Void SetInodeBitmap(void)
-{ 
-  int pMem = malloc(...);
-  ...
-} 
-Void PutInode(int lastBlkNum, int newBlkNum)
+void FileSysInit(void)
 {
-  ... // implement this func.
-} 
+}
+void SetInodeBitmap(int blkno)
+{
+}
+
+void ResetInodeBitmap(int blkno)
+{
+}
+
+void SetBlockBitmap(int blkno)
+{
+}
+
+void ResetBlockBitmap(int blkno)
+{
+}
+
+void PutInode(int blkno, Inode *pInode)
+{
+}
+
+void GetInode(int blkno, Inode *pInode)
+{
+}
+
+int GetFreeInodeNum(void)
+{
+}
+
+int GetFreeBlockNum(void)
+{
+}
