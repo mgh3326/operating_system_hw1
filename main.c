@@ -6,6 +6,13 @@ int main(void)
     printf("Start OK\n");
     int blkno, inodeno;
     FileSysInit();
+    SetInodeBitmap(2);
+    ResetInodeBitmap(6);
+    SetBlockBitmap(3);
+    SetBlockBitmap(6);
+    ResetBlockBitmap(6);
+
+    //GetInode(0, pInode)
     return 0;
 }
 // main(void)

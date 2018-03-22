@@ -1,4 +1,4 @@
 make:
-	gcc -o HW.out -g *.c
+	gcc -o a.out -g *.c
 clean:
 	rm -f *.o
