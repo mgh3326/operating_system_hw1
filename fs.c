@@ -81,11 +81,15 @@ void GetInode(int blkno, Inode *pInode)
     char *buf = malloc(BLOCK_SIZE);
 
     DevOpenDisk();
-    DevReadBlock(blkno % 8, buf);
+    //3번째 블록에 0~7
+    //4             8~15
+    //5             16~23
+    //6             24~31
+    DevReadBlock((blkno % 8)+3, buf);
     pInode = malloc(1 * sizeof *pInode);//이게 필요할라나
 
     // pInode->allocBlocks = 0;
-    pInode->allocBlocks = blkno % 8;
+    pInode->allocBlocks = (blkno % 8)+3;
     // pInode->type=?;
 
     // pInode->blockPointer[NUM_OF_BLK_PTR]; // Direct block pointers
@@ -93,8 +97,73 @@ void GetInode(int blkno, Inode *pInode)
 
 int GetFreeInodeNum(void)
 {
+        char *buf = malloc(BLOCK_SIZE);
+        DevOpenDisk();
+        DevReadBlock(1, buf);
+        int binary[20] = { 0, };
+        int position = 0;
+        int index;
+        for(int i=0;i<BLOCK_SIZE;i++)
+        {
+             int decimal = buf[i];
+
+            while (1)
+            {
+                binary[position] = decimal % 2;    // 배열에 나머지 저장
+                decimal = decimal / 2;             // 2로 나눈 몫을 저장
+
+                position++;    // 자릿수 변경
+                 if (decimal == 0)    // 몫이 0이 되면 반복을 끝냄
+                 {  
+                    index=0;
+                    break;
+                 }
+                    
+            }
+            for (int j = position - 1; j >= 0; j--)
+                {
+                    //printf("%d", binary[j]);
+                    if(binary[j]==0)
+                        return index;
+                    index++;
+                }
+        }
+        return -1; //실패할 경우
+
 }
 
 int GetFreeBlockNum(void)
 {
+    char *buf = malloc(BLOCK_SIZE);
+        DevOpenDisk();
+        DevReadBlock(2, buf);
+        int binary[20] = { 0, };
+        int position = 0;
+        int index;
+        for(int i=0;i<BLOCK_SIZE;i++)
+        {
+             int decimal = buf[i];
+
+            while (1)
+            {
+                binary[position] = decimal % 2;    // 배열에 나머지 저장
+                decimal = decimal / 2;             // 2로 나눈 몫을 저장
+
+                position++;    // 자릿수 변경
+                 if (decimal == 0)    // 몫이 0이 되면 반복을 끝냄
+                 {  
+                    index=0;
+                    break;
+                 }
+                    
+            }
+            for (int j = position - 1; j >= 0; j--)
+                {
+                    //printf("%d", binary[j]);
+                    if(binary[j]==0)
+                        return index;
+                    index++;
+                }
+        }
+        return -1; //실패할 경우
 }

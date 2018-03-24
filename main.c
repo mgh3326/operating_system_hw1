@@ -6,6 +6,8 @@ int main(void)
     printf("Start OK\n");
     int blkno, inodeno;
     FileSysInit();
+    inodeno = GetFreeInodeNum();
+    // printf("%d",inodeno);
     SetInodeBitmap(2);
     ResetInodeBitmap(6);
     SetBlockBitmap(3);
