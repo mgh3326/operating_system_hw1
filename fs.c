@@ -82,7 +82,10 @@ void GetInode(int blkno, Inode *pInode)
 
     DevOpenDisk();
     DevReadBlock(blkno % 8, buf);
-    // pInode->allocBlocks = blkno % 8;
+    pInode = malloc(1 * sizeof *pInode);//이게 필요할라나
+
+    // pInode->allocBlocks = 0;
+    pInode->allocBlocks = blkno % 8;
     // pInode->type=?;
 
     // pInode->blockPointer[NUM_OF_BLK_PTR]; // Direct block pointers
