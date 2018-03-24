@@ -52,7 +52,9 @@ void SetBlockBitmap(int blkno)
     DevOpenDisk();
     DevReadBlock(2, buf);
     // printf("first : %s\n", buf);
-    buf[blkno / 8] |= 128 / (blkno % 8);
+
+    buf[blkno / 8] |= 128 / ((blkno % 8));
+    
     // printf("second : %s\n", buf);
     DevWriteBlock(2, buf);
     free(buf);
@@ -64,7 +66,7 @@ void ResetBlockBitmap(int blkno)
     DevOpenDisk();
     DevReadBlock(2, buf);
     // printf("first : %d\n", buf[0]);
-    buf[blkno / 8] ^= 128 / (blkno % 8);
+    buf[blkno / 8] ^= 128 / ((blkno % 8));
 
     // printf("second : %d\n", buf[0]);
 
