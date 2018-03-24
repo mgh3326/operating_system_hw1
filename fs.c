@@ -25,25 +25,25 @@ void FileSysInit(void)
     }
     free(buf);
 }
-void SetInodeBitmap(int blkno)
+void SetInodeBitmap(int inodeno)
 {
     char *buf = malloc(BLOCK_SIZE);
     DevOpenDisk();
     DevReadBlock(1, buf);
     // printf("first : %s\n", buf);
-    buf[blkno] = '1';
+    buf[inodeno] = '1';
     // printf("second : %s\n", buf);
     DevWriteBlock(1, buf);
     free(buf);
 }
 
-void ResetInodeBitmap(int blkno)
+void ResetInodeBitmap(int inodeno)
 {
     char *buf = malloc(BLOCK_SIZE);
     DevOpenDisk();
     DevReadBlock(1, buf);
     // printf("first : %s\n", buf);
-    buf[blkno] = '0';
+    buf[inodeno] = '0';
     // printf("second : %s\n", buf);
     DevWriteBlock(1, buf);
     free(buf);
