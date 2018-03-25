@@ -7,6 +7,8 @@
 void FileSysInit(void)//Success
 {
     DevCreateDisk();
+    // DevOpenDisk();
+
     char *buf = malloc(BLOCK_SIZE);
     for (int i = 0; i < BLOCK_SIZE; i++)
     {
@@ -22,7 +24,7 @@ void FileSysInit(void)//Success
 void SetInodeBitmap(int inodeno)
 {
     char *buf = malloc(BLOCK_SIZE);
-    DevOpenDisk();
+    //DevOpenDisk();
     DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
     // printf("first : %s\n", buf);
     // inodeno%8
@@ -42,7 +44,7 @@ void SetInodeBitmap(int inodeno)
 void ResetInodeBitmap(int inodeno)
 {
     char *buf = malloc(BLOCK_SIZE);
-    DevOpenDisk();
+    //DevOpenDisk();
     DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
     // printf("first : %s\n", buf);
     // buf[inodeno / 8] ^= 128 /((inodeno % 8)+1);
@@ -56,7 +58,7 @@ void ResetInodeBitmap(int inodeno)
 void SetBlockBitmap(int blkno)
 {
     char *buf = malloc(BLOCK_SIZE);
-    DevOpenDisk();
+    //DevOpenDisk();
     DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
     // printf("first : %s\n", buf);
 
@@ -72,7 +74,7 @@ void SetBlockBitmap(int blkno)
 void ResetBlockBitmap(int blkno)
 {
     char *buf = malloc(BLOCK_SIZE);
-    DevOpenDisk();
+    //DevOpenDisk();
     DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
     // printf("first : %d\n", buf[0]);
     // buf[blkno / 8] ^= 128 / ((blkno % 8)+1);
@@ -88,7 +90,7 @@ void ResetBlockBitmap(int blkno)
 void PutInode(int blkno, Inode *pInode)
 {
     char *buf = malloc(BLOCK_SIZE);
-    DevOpenDisk();
+    //DevOpenDisk();
     DevReadBlock((blkno / 8)+INODELIST_BLK_FIRST, buf);
     // pInode->allocBlocks--;
     // memcpy(buf+(blkno % 8)*64, (void *)&pInode->type, BLOCK_SIZE/8);
@@ -105,7 +107,7 @@ void GetInode(int blkno, Inode *pInode)
 {
     char *buf = malloc(BLOCK_SIZE);
 
-    DevOpenDisk();
+    //DevOpenDisk();
     //3번째 블록에 0~7
     //4             8~15
     //5             16~23
@@ -131,7 +133,7 @@ void GetInode(int blkno, Inode *pInode)
 int GetFreeInodeNum(void)
 {
         char *buf = malloc(BLOCK_SIZE);
-        DevOpenDisk();
+        //DevOpenDisk();
         DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
 
 
@@ -186,7 +188,7 @@ int GetFreeInodeNum(void)
 int GetFreeBlockNum(void)
 {
     char *buf = malloc(BLOCK_SIZE);
-        DevOpenDisk();
+        //DevOpenDisk();
         DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
 
         for(int i = 0; i <= BLOCK_SIZE - 1; i++){
