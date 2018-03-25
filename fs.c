@@ -23,19 +23,19 @@ void SetInodeBitmap(int inodeno)
 {
     char *buf = malloc(BLOCK_SIZE);
     DevOpenDisk();
-    DevReadBlock(1, buf);
+    DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
     // printf("first : %s\n", buf);
     // inodeno%8
     // if(inodeno%8==0){//0일때
     // buf[inodeno / 8] |= 128;    
     // }
     // else{
-buf[inodeno / 8] |= 128 / ((inodeno % 8)+1);
-    
+    // buf[inodeno / 8] |= 128 / ((inodeno % 8)+1);//원래 내꺼
+    buf[inodeno / 8] |= 1 << (8 - 1 - inodeno % 8);
     
 
     // printf("second : %s\n", buf);
-    DevWriteBlock(1, buf);
+    DevWriteBlock(INODE_BITMAP_BLK_NUM, buf);
     free(buf);
 }
 
@@ -43,11 +43,13 @@ void ResetInodeBitmap(int inodeno)
 {
     char *buf = malloc(BLOCK_SIZE);
     DevOpenDisk();
-    DevReadBlock(1, buf);
+    DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
     // printf("first : %s\n", buf);
-    buf[inodeno / 8] ^= 128 /((inodeno % 8)+1);
+    // buf[inodeno / 8] ^= 128 /((inodeno % 8)+1);
+    buf[inodeno / 8] &= ~(1 << (8 - 1 - inodeno % 8));
+
     // printf("second : %s\n", buf);
-    DevWriteBlock(1, buf);
+    DevWriteBlock(INODE_BITMAP_BLK_NUM, buf);
     free(buf);
 }
 
@@ -55,13 +57,14 @@ void SetBlockBitmap(int blkno)
 {
     char *buf = malloc(BLOCK_SIZE);
     DevOpenDisk();
-    DevReadBlock(2, buf);
+    DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
     // printf("first : %s\n", buf);
 
-    buf[blkno / 8] |= 128 / ((blkno % 8)+1);
-    
+    // buf[blkno / 8] |= 128 / ((blkno % 8)+1);
+        buf[blkno / 8] |= 1 << (8 - 1 - blkno % 8);
+
     // printf("second : %s\n", buf);
-    DevWriteBlock(2, buf);
+    DevWriteBlock(BLOCK_BITMAP_BLK_NUM, buf);
     free(buf);
 }
 
@@ -69,13 +72,14 @@ void ResetBlockBitmap(int blkno)
 {
     char *buf = malloc(BLOCK_SIZE);
     DevOpenDisk();
-    DevReadBlock(2, buf);
+    DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
     // printf("first : %d\n", buf[0]);
-    buf[blkno / 8] ^= 128 / ((blkno % 8)+1);
+    // buf[blkno / 8] ^= 128 / ((blkno % 8)+1);
+    buf[blkno / 8] &= ~(1 << (8 - 1 - blkno % 8));
 
     // printf("second : %d\n", buf[0]);
 
-    DevWriteBlock(2, buf);
+    DevWriteBlock(BLOCK_BITMAP_BLK_NUM, buf);
     free(buf);
 }
 
@@ -83,10 +87,12 @@ void PutInode(int blkno, Inode *pInode)
 {
     char *buf = malloc(BLOCK_SIZE);
     DevOpenDisk();
-    DevReadBlock((blkno / 8)+3, buf);
-    pInode->allocBlocks--;
-    memcpy(buf+(blkno % 8)*64, (void *)&pInode->type, BLOCK_SIZE/8);
-    DevWriteBlock((blkno / 8)+3, buf);
+    DevReadBlock((blkno / 8)+INODELIST_BLK_FIRST, buf);
+    // pInode->allocBlocks--;
+    // memcpy(buf+(blkno % 8)*64, (void *)&pInode->type, BLOCK_SIZE/8);
+   	memcpy(buf + (blkno % 8) * sizeof(Inode), pInode, sizeof(Inode));
+
+    DevWriteBlock((blkno / 8)+INODELIST_BLK_FIRST, buf);
     free(buf);
 
 //   memcpy((void *)&pInode->type, (void *)&buf+(blkno % 8)*64, BLOCK_SIZE/8);
@@ -102,16 +108,17 @@ void GetInode(int blkno, Inode *pInode)
     //4             8~15
     //5             16~23
     //6             24~31
-    DevReadBlock((blkno / 8)+3, buf);
+    DevReadBlock((blkno / 8)+INODELIST_BLK_FIRST, buf);
     // for(int i=0;i<512;i++)
     // {
     //     printf("%d : %d \n",i,pInode[i].type);
     // }
     
-    memcpy((void *)&pInode->type, (void *)&buf+(blkno % 8)*64, BLOCK_SIZE/8);
+    //memcpy((void *)&pInode->type, (void *)&buf+(blkno % 8)*64, BLOCK_SIZE/8);
+	memcpy(pInode, buf + (blkno % 8) * sizeof(Inode), sizeof(Inode));
 
     // pInode->allocBlocks = 0;
-    pInode->allocBlocks++;
+    // pInode->allocBlocks++;
     free(buf);
 
     // pInode->type=?;
@@ -123,42 +130,54 @@ int GetFreeInodeNum(void)
 {
         char *buf = malloc(BLOCK_SIZE);
         DevOpenDisk();
-        DevReadBlock(1, buf);
-        int binary[20] = { 0, };
-        int position = 0;
-        int index;
-        for(int i=0;i<BLOCK_SIZE;i++)
-        {
-             int decimal = buf[i];
+        DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
 
-            while (1)
-            {
-                binary[position] = decimal % 2;    // 배열에 나머지 저장
-                decimal = decimal / 2;             // 2로 나눈 몫을 저장
 
-                position++;    // 자릿수 변경
-                 if (decimal == 0)    // 몫이 0이 되면 반복을 끝냄
-                 {  
-                    index=0;
-                    break;
-                 }
+        for(int i = 0; i <= BLOCK_SIZE - 1; i++){
+		//if pBlock[i] == 11111111, continue
+		if(buf[i] == -1) continue;
+
+		for(int j = 7; j >= 0; j--){
+			if(!(buf[i] >> j & 1)){
+				return (i * 8) + (7 - j);
+			}
+		}
+	}
+        // int binary[20] = { 0, };
+        // int position = 0;
+        // int index;
+        // for(int i=0;i<BLOCK_SIZE;i++)
+        // {
+        //      int decimal = buf[i];
+
+        //     while (1)
+        //     {
+        //         binary[position] = decimal % 2;    // 배열에 나머지 저장
+        //         decimal = decimal / 2;             // 2로 나눈 몫을 저장
+
+        //         position++;    // 자릿수 변경
+        //          if (decimal == 0)    // 몫이 0이 되면 반복을 끝냄
+        //          {  
+        //             index=0;
+        //             break;
+        //          }
                     
-            }
-            for (int j = position - 1; j >= 0; j--)
-                {
-                    //printf("%d", binary[j]);
-                    if(binary[j]==0)
-                        {
-                                free(buf);
+        //     }
+        //     for (int j = position - 1; j >= 0; j--)
+        //         {
+        //             //printf("%d", binary[j]);
+        //             if(binary[j]==0)
+        //                 {
+        //                         free(buf);
 
-                            return index;
-                        }
-                    index++;
-                }
-        }
-            free(buf);
+        //                     return index;
+        //                 }
+        //             index++;
+        //         }
+        // }
+        //     free(buf);
 
-        return -1; //실패할 경우
+        // return -1; //실패할 경우
 
 }
 
@@ -166,41 +185,52 @@ int GetFreeBlockNum(void)
 {
     char *buf = malloc(BLOCK_SIZE);
         DevOpenDisk();
-        DevReadBlock(2, buf);
-        int binary[20] = { 0, };
-        int position = 0;
-        int index;
-        for(int i=0;i<BLOCK_SIZE;i++)
-        {
-             int decimal = buf[i];
+        DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
 
-            while (1)
-            {
-                binary[position] = decimal % 2;    // 배열에 나머지 저장
-                decimal = decimal / 2;             // 2로 나눈 몫을 저장
+        for(int i = 0; i <= BLOCK_SIZE - 1; i++){
+		//if pBlock[i] == 11111111, continue
+		if(buf[i] == -1) continue;
+		
+		for(int j = 7; j >= 0; j--){
+			if(!(buf[i] >> j & 1)){
+				return (i * 8) + (7 - j);
+			}
+		}
+	}
+        // int binary[20] = { 0, };
+        // int position = 0;
+        // int index;
+        // for(int i=0;i<BLOCK_SIZE;i++)
+        // {
+        //      int decimal = buf[i];
 
-                position++;    // 자릿수 변경
-                 if (decimal == 0)    // 몫이 0이 되면 반복을 끝냄
-                 {  
-                    index=0;
-                    break;
-                 }
+        //     while (1)
+        //     {
+        //         binary[position] = decimal % 2;    // 배열에 나머지 저장
+        //         decimal = decimal / 2;             // 2로 나눈 몫을 저장
+
+        //         position++;    // 자릿수 변경
+        //          if (decimal == 0)    // 몫이 0이 되면 반복을 끝냄
+        //          {  
+        //             index=0;
+        //             break;
+        //          }
                     
-            }
-            for (int j = position - 1; j >= 0; j--)
-                {
-                    //printf("%d", binary[j]);
-                    if(binary[j]==0)
-                    {
-                                    free(buf);
+        //     }
+        //     for (int j = position - 1; j >= 0; j--)
+        //         {
+        //             //printf("%d", binary[j]);
+        //             if(binary[j]==0)
+        //             {
+        //                             free(buf);
 
-                        return index;
-                    }
+        //                 return index;
+        //             }
                         
-                    index++;
-                }
-        }
-                    free(buf);
+        //             index++;
+        //         }
+        // }
+        //             free(buf);
 
-        return -1; //실패할 경우
+        // return -1; //실패할 경우
 }
