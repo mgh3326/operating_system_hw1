@@ -148,5 +148,5 @@ void testcase6()
 void main(void)
 {
 	FileSysInit();
-    testcase6();
+    testcase5();
 }

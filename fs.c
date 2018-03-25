@@ -31,7 +31,7 @@ void SetInodeBitmap(int inodeno)
     // }
     // else{
     // buf[inodeno / 8] |= 128 / ((inodeno % 8)+1);//원래 내꺼
-    buf[inodeno / 8] |= 1 << (8 - 1 - inodeno % 8);
+    buf[inodeno / 8] |= 1 << (8 - 1 - (inodeno % 8));
     
 
     // printf("second : %s\n", buf);
@@ -46,7 +46,7 @@ void ResetInodeBitmap(int inodeno)
     DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
     // printf("first : %s\n", buf);
     // buf[inodeno / 8] ^= 128 /((inodeno % 8)+1);
-    buf[inodeno / 8] &= ~(1 << (8 - 1 - inodeno % 8));
+    buf[inodeno / 8] &= ~(1 << (8 - 1 - (inodeno % 8)));
 
     // printf("second : %s\n", buf);
     DevWriteBlock(INODE_BITMAP_BLK_NUM, buf);
@@ -61,7 +61,8 @@ void SetBlockBitmap(int blkno)
     // printf("first : %s\n", buf);
 
     // buf[blkno / 8] |= 128 / ((blkno % 8)+1);
-        buf[blkno / 8] |= 1 << (8 - 1 - blkno % 8);
+      //  buf[blkno / 8] |= 1 << (8 - 1 - blkno % 8);
+    buf[blkno / 8] |= 1 << (8 - 1 - (blkno % 8));
 
     // printf("second : %s\n", buf);
     DevWriteBlock(BLOCK_BITMAP_BLK_NUM, buf);
@@ -75,7 +76,8 @@ void ResetBlockBitmap(int blkno)
     DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
     // printf("first : %d\n", buf[0]);
     // buf[blkno / 8] ^= 128 / ((blkno % 8)+1);
-    buf[blkno / 8] &= ~(1 << (8 - 1 - blkno % 8));
+    //buf[blkno / 8] &= ~(1 << (8 - 1 - blkno % 8));
+    buf[blkno / 8] &= ~(1 << (8 - 1 - (blkno % 8)));
 
     // printf("second : %d\n", buf[0]);
 
