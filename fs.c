@@ -4,7 +4,7 @@
 #include "temp.h" //이거 추가하면 될라나
 #include <stdlib.h>
 #include <string.h>
-void FileSysInit(void)
+void FileSysInit(void)//Success
 {
     DevCreateDisk();
     char *buf = malloc(BLOCK_SIZE);
@@ -81,9 +81,16 @@ void ResetBlockBitmap(int blkno)
 
 void PutInode(int blkno, Inode *pInode)
 {
-     char *buf = malloc(BLOCK_SIZE);
+    char *buf = malloc(BLOCK_SIZE);
     DevOpenDisk();
+    DevReadBlock((blkno / 8)+3, buf);
     pInode->allocBlocks--;
+    memcpy(buf+(blkno % 8)*64, (void *)&pInode->type, BLOCK_SIZE/8);
+    DevWriteBlock((blkno / 8)+3, buf);
+    free(buf);
+
+//   memcpy((void *)&pInode->type, (void *)&buf+(blkno % 8)*64, BLOCK_SIZE/8);
+
 }
 
 void GetInode(int blkno, Inode *pInode)
@@ -96,10 +103,16 @@ void GetInode(int blkno, Inode *pInode)
     //5             16~23
     //6             24~31
     DevReadBlock((blkno / 8)+3, buf);
-    pInode = malloc(1 * sizeof *pInode);//이게 필요할라나
+    // for(int i=0;i<512;i++)
+    // {
+    //     printf("%d : %d \n",i,pInode[i].type);
+    // }
+    
+    memcpy((void *)&pInode->type, (void *)&buf+(blkno % 8)*64, BLOCK_SIZE/8);
 
     // pInode->allocBlocks = 0;
     pInode->allocBlocks++;
+    free(buf);
 
     // pInode->type=?;
 
