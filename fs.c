@@ -26,8 +26,13 @@ void SetInodeBitmap(int inodeno)
     DevReadBlock(1, buf);
     // printf("first : %s\n", buf);
     // inodeno%8
-
-    buf[inodeno / 8] |= 128 / (inodeno % 8);
+    // if(inodeno%8==0){//0일때
+    // buf[inodeno / 8] |= 128;    
+    // }
+    // else{
+buf[inodeno / 8] |= 128 / ((inodeno % 8)+1);
+    
+    
 
     // printf("second : %s\n", buf);
     DevWriteBlock(1, buf);
@@ -40,7 +45,7 @@ void ResetInodeBitmap(int inodeno)
     DevOpenDisk();
     DevReadBlock(1, buf);
     // printf("first : %s\n", buf);
-    buf[inodeno / 8] ^= 128 / (inodeno % 8);
+    buf[inodeno / 8] ^= 128 /((inodeno % 8)+1);
     // printf("second : %s\n", buf);
     DevWriteBlock(1, buf);
     free(buf);
@@ -53,7 +58,7 @@ void SetBlockBitmap(int blkno)
     DevReadBlock(2, buf);
     // printf("first : %s\n", buf);
 
-    buf[blkno / 8] |= 128 / ((blkno % 8));
+    buf[blkno / 8] |= 128 / ((blkno % 8)+1);
     
     // printf("second : %s\n", buf);
     DevWriteBlock(2, buf);
@@ -66,7 +71,7 @@ void ResetBlockBitmap(int blkno)
     DevOpenDisk();
     DevReadBlock(2, buf);
     // printf("first : %d\n", buf[0]);
-    buf[blkno / 8] ^= 128 / ((blkno % 8));
+    buf[blkno / 8] ^= 128 / ((blkno % 8)+1);
 
     // printf("second : %d\n", buf[0]);
 

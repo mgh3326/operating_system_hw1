@@ -8,10 +8,11 @@ int main(void)
     FileSysInit();
     inodeno = GetFreeInodeNum();
     // printf("%d",inodeno);
-    SetInodeBitmap(2);
+
+    SetInodeBitmap(inodeno);
+    blkno = GetFreeBlockNum();
     ResetInodeBitmap(6);
-    SetBlockBitmap(3);
-    SetBlockBitmap(6);
+    SetBlockBitmap(blkno);
     ResetBlockBitmap(6);
     Inode *pInode;
     GetInode(0, pInode);
