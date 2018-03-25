@@ -1,5 +1,5 @@
 #define NUM_OF_BLK_PTR  (14)
-	
+
 #define INODE_BITMAP_BLK_NUM  (1) /* inode bitmap block no. */
 #define BLOCK_BITMAP_BLK_NUM  (2) /* block bitmap block no. */
 #define INODELIST_BLK_FIRST   (3) /* the first block no. of inode list */

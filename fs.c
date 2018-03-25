@@ -81,6 +81,9 @@ void ResetBlockBitmap(int blkno)
 
 void PutInode(int blkno, Inode *pInode)
 {
+     char *buf = malloc(BLOCK_SIZE);
+    DevOpenDisk();
+    pInode->allocBlocks--;
 }
 
 void GetInode(int blkno, Inode *pInode)
@@ -92,11 +95,12 @@ void GetInode(int blkno, Inode *pInode)
     //4             8~15
     //5             16~23
     //6             24~31
-    DevReadBlock((blkno % 8)+3, buf);
+    DevReadBlock((blkno / 8)+3, buf);
     pInode = malloc(1 * sizeof *pInode);//이게 필요할라나
 
     // pInode->allocBlocks = 0;
-    pInode->allocBlocks = (blkno % 8)+3;
+    pInode->allocBlocks++;
+
     // pInode->type=?;
 
     // pInode->blockPointer[NUM_OF_BLK_PTR]; // Direct block pointers
@@ -131,10 +135,16 @@ int GetFreeInodeNum(void)
                 {
                     //printf("%d", binary[j]);
                     if(binary[j]==0)
-                        return index;
+                        {
+                                free(buf);
+
+                            return index;
+                        }
                     index++;
                 }
         }
+            free(buf);
+
         return -1; //실패할 경우
 
 }
@@ -168,9 +178,16 @@ int GetFreeBlockNum(void)
                 {
                     //printf("%d", binary[j]);
                     if(binary[j]==0)
+                    {
+                                    free(buf);
+
                         return index;
+                    }
+                        
                     index++;
                 }
         }
+                    free(buf);
+
         return -1; //실패할 경우
 }

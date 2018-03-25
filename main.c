@@ -1,22 +1,27 @@
 #include <stdio.h>
 #include "fs.h"
-
+#include "disk.h"
+#include <stdlib.h>
 int main(void)
 {
-    printf("Start OK\n");
-    int blkno, inodeno;
-    FileSysInit();
-    inodeno = GetFreeInodeNum();
-    // printf("%d",inodeno);
+	printf("Start OK\n");
+	int blkno, inodeno;
+	FileSysInit();
+	inodeno = GetFreeInodeNum();
+	// printf("%d",inodeno);
 
-    SetInodeBitmap(inodeno);
-    blkno = GetFreeBlockNum();
-    ResetInodeBitmap(6);
-    SetBlockBitmap(blkno);
-    ResetBlockBitmap(6);
-    Inode *pInode;
-    GetInode(0, pInode);
-    return 0;
+	SetInodeBitmap(inodeno);
+	blkno = GetFreeBlockNum();
+	ResetInodeBitmap(6);
+	SetBlockBitmap(blkno);
+	ResetBlockBitmap(6);
+	Inode *pInode;
+	pInode = malloc(BLOCK_SIZE / 8);
+	GetInode(5, pInode);
+	// pInode0->allocBolcks=();
+	pInode->blockPointer[0] = 10;
+	PutInode(5, pInode);
+	return 0;
 }
 // main(void)
 // {
@@ -29,9 +34,3 @@ int main(void)
 //   ...
 // }
 
-// Inode = pInode;
-// pInode=malloc(sizeof(Inode));
-// GetInode(5,pInode);
-// pInode0->allocBolcks=();
-// pInode0->blockPointer[0]=10;
-// putInode(5,pInode);
