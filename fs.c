@@ -134,7 +134,7 @@ int GetFreeInodeNum(void)
     //DevOpenDisk();
     DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
 
-    for (int i = 0; i <= BLOCK_SIZE - 1; i++)
+    for (int i = 0; i < BLOCK_SIZE; i++)
     {
         //if pBlock[i] == 11111111, continue
         if (buf[i] == -1)
@@ -191,7 +191,7 @@ int GetFreeBlockNum(void)
     //DevOpenDisk();
     DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
 
-    for (int i = 0; i <= BLOCK_SIZE - 1; i++)
+    for (int i = 0; i < BLOCK_SIZE; i++)
     {
         //if pBlock[i] == 11111111, continue
         if (buf[i] == -1)
