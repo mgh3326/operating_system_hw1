@@ -157,13 +157,12 @@ int GetFreeInodeNum(void)
         // }
         for (int j = 0; j < 8; j++)
         {
-            if ((buf[i] >> (7 - j) & 1)==0) // >> 연산자가 & 보다 우선순위가 높구나
+            if ((buf[i] >> (7 - j) & 1) == 0) // >> 연산자가 & 보다 우선순위가 높구나
             {
                 free(buf);
                 return (i * 8) + j;
             }
         }
-        
     }
     free(buf);
     return -1; //실패 했을 경우?
@@ -225,7 +224,15 @@ int GetFreeBlockNum(void)
         // }
         for (int j = 0; j < 8; j++)
         {
-            if ((buf[i] >> (7 - j) & 1)==0) // >> 연산자가 & 보다 우선순위가 높구나
+            if ((buf[i] >> (7 - j) & 1) == 0) // >> 연산자가 & 보다 우선순위가 높구나
+            {
+                free(buf);
+                return (i * 8) + j;
+            }
+        }
+        for (int j = 0; j < 8; j++)
+        {
+            if ((buf[i] << j & 128) == 0) // >> 연산자가 & 보다 우선순위가 높구나
             {
                 free(buf);
                 return (i * 8) + j;
