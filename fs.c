@@ -148,11 +148,18 @@ int GetFreeInodeNum(void)
         if (buf[i] == -1)
             continue;
 
-        for (int j = 7; j >= 0; j--)
+        // for (int j = 7; j >= 0; j--)
+        // {
+        //     if (!(buf[i] >> j & 1)) // >> 연산자가 & 보다 우선순위가 높구나
+        //     {
+        //         return (i * 8) + (7 - j);
+        //     }
+        // }
+        for (int j = 0; j < 8; j++)
         {
-            if (!(buf[i] >> j & 1))
+            if (!(buf[i] >> (7 - j) & 1)) // >> 연산자가 & 보다 우선순위가 높구나
             {
-                return (i * 8) + (7 - j);
+                return (i * 8) + j;
             }
         }
     }
@@ -205,11 +212,18 @@ int GetFreeBlockNum(void)
         if (buf[i] == -1)
             continue;
 
-        for (int j = 7; j >= 0; j--)
+        // for (int j = 7; j >= 0; j--)
+        // {
+        //     if (!(buf[i] >> j & 1))
+        //     {
+        //         return (i * 8) + (7 - j);
+        //     }
+        // }
+        for (int j = 0; j < 8; j++)
         {
-            if (!(buf[i] >> j & 1))
+            if (!(buf[i] >> (7 - j) & 1)) // >> 연산자가 & 보다 우선순위가 높구나
             {
-                return (i * 8) + (7 - j);
+                return (i * 8) + j;
             }
         }
     }
