@@ -219,6 +219,8 @@ void main(int argc, char *args[])
 	if (argc < 2)
 	{
 		printf("인자 넣어라\n");
+		// func[1]();
+		testcase1();
 		return;
 	}
 	func[*args[1] - '0']();

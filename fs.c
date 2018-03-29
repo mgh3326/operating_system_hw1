@@ -10,11 +10,11 @@ void FileSysInit(void) //Success
     // DevOpenDisk();
 
     char *buf = malloc(BLOCK_SIZE);
-    for (int i = 0; i < BLOCK_SIZE; i++)
-    {
-        buf[i] = 0;
-    }
-    // memset(buf, 0, sizeof(buf)); // 이러면 되는건가
+    // for (int i = 0; i < BLOCK_SIZE; i++)
+    // {
+    //     buf[i] = 0;
+    // }
+    memset(buf, 0, sizeof(buf)); // memset을 통해서 모든 메모리를 0으로 만듭니다.
     for (int i = 0; i <= 6; i++) //1부터 6까지라서
     {
         DevWriteBlock(i, buf);
@@ -33,6 +33,8 @@ void SetInodeBitmap(int inodeno)
     // }
     // else{
     // buf[inodeno / 8] |= 128 / ((inodeno % 8)+1);//원래 내꺼
+    int num_inode = inodeno / 8;   //inode 가 몇번째 배열에 있는지를 나타냅니다.
+    int index_inode = inodeno % 8; //inode의 index를 가르킵니다.
     buf[inodeno / 8] |= 1 << (8 - 1 - (inodeno % 8));
 
     // printf("second : %s\n", buf);
@@ -47,6 +49,8 @@ void ResetInodeBitmap(int inodeno)
     DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
     // printf("first : %s\n", buf);
     // buf[inodeno / 8] ^= 128 /((inodeno % 8)+1);
+    int num_inode = inodeno / 8;   //inode 가 몇번째 배열에 있는지를 나타냅니다.
+    int index_inode = inodeno % 8; //inode의 index를 가르킵니다.
     buf[inodeno / 8] &= ~(1 << (8 - 1 - (inodeno % 8)));
 
     // printf("second : %s\n", buf);
@@ -63,6 +67,8 @@ void SetBlockBitmap(int blkno)
 
     // buf[blkno / 8] |= 128 / ((blkno % 8)+1);
     //  buf[blkno / 8] |= 1 << (8 - 1 - blkno % 8);
+    int num_inode = blkno / 8;   //inode 가 몇번째 배열에 있는지를 나타냅니다.
+    int index_inode = blkno % 8; //inode의 index를 가르킵니다.
     buf[blkno / 8] |= 1 << (8 - 1 - (blkno % 8));
 
     // printf("second : %s\n", buf);
@@ -78,6 +84,8 @@ void ResetBlockBitmap(int blkno)
     // printf("first : %d\n", buf[0]);
     // buf[blkno / 8] ^= 128 / ((blkno % 8)+1);
     //buf[blkno / 8] &= ~(1 << (8 - 1 - blkno % 8));
+    int num_inode = blkno / 8;   //inode 가 몇번째 배열에 있는지를 나타냅니다.
+    int index_inode = blkno % 8; //inode의 index를 가르킵니다.
     buf[blkno / 8] &= ~(1 << (8 - 1 - (blkno % 8)));
 
     // printf("second : %d\n", buf[0]);
