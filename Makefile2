@@ -1,0 +1,10 @@
+HW.out: testcase.o disk.o fs.o validate.o
+	gcc -o HW.out testcase.o disk.o fs.o validate.o
+testcase.o: testcase.c
+	gcc -c testcase.c
+disk.o: disk.c disk.h
+	gcc -c disk.c
+fs.o: fs.c fs.h
+	gcc -c fs.c
+clean:
+	rm -f *.o
