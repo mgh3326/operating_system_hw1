@@ -22,7 +22,7 @@ void DevOpenDisk(void) //가상 디스크를 생성하지는 않고 단지 open�
 
 void __DevMoveBlock(int blkno)
 {
-	lseek(fd, (off_t)+(BLOCK_SIZE * blkno), SEEK_SET);
+	lseek(fd, (off_t) + (BLOCK_SIZE * blkno), SEEK_SET);
 }
 
 void DevReadBlock(int blkno, char *pBuf)
