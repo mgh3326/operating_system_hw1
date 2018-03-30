@@ -7,18 +7,18 @@
 #include <assert.h>
 
 #define INODE_SIZE (64)
-#define NUM_INODE_PER_BLOCK (BLOCK_SIZE/INODE_SIZE)	// 512/64 = 8
-#define TOTAL_INODE_NUM (NUM_INODE_PER_BLOCK * INODELIST_BLKS) 	// 8 * 4 = 32
-#define TOTAL_BLOCK_NUM (TOTAL_INODE_NUM)	//32
+#define NUM_INODE_PER_BLOCK (BLOCK_SIZE / INODE_SIZE)		   // 512/64 = 8
+#define TOTAL_INODE_NUM (NUM_INODE_PER_BLOCK * INODELIST_BLKS) // 8 * 4 = 32
+#define TOTAL_BLOCK_NUM (TOTAL_INODE_NUM)					   //32
 
 void testcase1(void)
 {
-	int i =0;
+	int i = 0;
 	FileSysInit();
-	
-	for(i=0; i < TOTAL_BLOCK_NUM;i++)
+
+	for (i = 0; i < TOTAL_BLOCK_NUM; i++)
 	{
-		if(i%4==3)
+		if (i % 4 == 3)
 		{
 			SetBlockBitmap(i);
 			/*
@@ -34,10 +34,10 @@ void testcase1(void)
 			*/
 		}
 	}
-	
-	for(i=0;i<TOTAL_BLOCK_NUM;i++)
+
+	for (i = 0; i < TOTAL_BLOCK_NUM; i++)
 	{
-		if(i%8==7)
+		if (i % 8 == 7)
 		{
 			ResetBlockBitmap(i);
 			/*
@@ -53,29 +53,28 @@ void testcase1(void)
 			*/
 		}
 	}
-	
+
 	printf("Testcase 1 Complete!\n");
 }
 
-
 void testcase2(void)
 {
-	int i=0;
-	int BitValue =0;
-	
+	int i = 0;
+	int BitValue = 0;
+
 	FileSysInit();
-	
-	for(i=0;i<TOTAL_BLOCK_NUM;i++)
+
+	for (i = 0; i < TOTAL_BLOCK_NUM; i++)
 	{
 		SetBlockBitmap(i);
 	}
-	
-	for(i=0;i<TOTAL_BLOCK_NUM;i++)
+
+	for (i = 0; i < TOTAL_BLOCK_NUM; i++)
 	{
-		if(i%8==7)
+		if (i % 8 == 7)
 		{
 			ResetBlockBitmap(i);
-			if(i== GetFreeBlockNum())
+			if (i == GetFreeBlockNum())
 			{
 				/*
 				if(vGetBitValue(BLOCK_BITMAP_BLK_NUM,i)==0)
@@ -98,19 +97,18 @@ void testcase2(void)
 			}
 		}
 	}
-	
+
 	printf("TestCase 2 Complete!\n");
 }
 
-
 void testcase3(void)
 {
-	int i =0;
+	int i = 0;
 	FileSysInit();
-	
-	for(i=0; i < TOTAL_INODE_NUM;i++)
+
+	for (i = 0; i < TOTAL_INODE_NUM; i++)
 	{
-		if(i%4==3)
+		if (i % 4 == 3)
 		{
 			SetInodeBitmap(i);
 			/*
@@ -126,10 +124,10 @@ void testcase3(void)
 			*/
 		}
 	}
-	
-	for(i=0;i<TOTAL_INODE_NUM;i++)
+
+	for (i = 0; i < TOTAL_INODE_NUM; i++)
 	{
-		if(i%8==7)
+		if (i % 8 == 7)
 		{
 			ResetInodeBitmap(i);
 			/*
@@ -145,28 +143,27 @@ void testcase3(void)
 			*/
 		}
 	}
-	
-	printf("Testcase 3 Complete!\n");
 
+	printf("Testcase 3 Complete!\n");
 }
 
 void testcase4(void)
 {
-	int i=0;
-	int BitValue =0;
+	int i = 0;
+	int BitValue = 0;
 	FileSysInit();
-	
-	for(i=0;i<TOTAL_INODE_NUM;i++)
+
+	for (i = 0; i < TOTAL_INODE_NUM; i++)
 	{
 		SetInodeBitmap(i);
 	}
-	
-	for(i=0;i<TOTAL_INODE_NUM;i++)
+
+	for (i = 0; i < TOTAL_INODE_NUM; i++)
 	{
-		if(i%8==7)
-		{	
+		if (i % 8 == 7)
+		{
 			ResetInodeBitmap(i);
-			if(i== GetFreeInodeNum())
+			if (i == GetFreeInodeNum())
 			{
 				/*
 				if(vGetBitValue(INODE_BITMAP_BLK_NUM,i)==0 )
@@ -188,25 +185,25 @@ void testcase4(void)
 				return;
 			}
 		}
-	}	
+	}
 	printf("TestCase 4 Complete!\n");
 }
 
 void testcase5(void)
 {
-    int i =0;
-    Inode * pInode = (Inode*)malloc(sizeof(Inode));
-    Inode * pTmpInode = (Inode*)malloc(sizeof(Inode));
-    for(i=0;i<TOTAL_INODE_NUM;i++)
-    {
-        if(i%2==1)
-        {
-            pInode->allocBlocks = i;
-            pInode->blockPointer[2]=i;
-            pInode->blockPointer[11]=i;
+	int i = 0;
+	Inode *pInode = (Inode *)malloc(sizeof(Inode));
+	Inode *pTmpInode = (Inode *)malloc(sizeof(Inode));
+	for (i = 0; i < TOTAL_INODE_NUM; i++)
+	{
+		if (i % 2 == 1)
+		{
+			pInode->allocBlocks = i;
+			pInode->blockPointer[2] = i;
+			pInode->blockPointer[11] = i;
 
-            PutInode(i,pInode);
-               //vGetInodeValue(i, pTmpInode); 
+			PutInode(i, pInode);
+			//vGetInodeValue(i, pTmpInode);
 
 			/*
             if(pTmpInode->allocBlocks == pInode->allocBlocks 
@@ -221,15 +218,15 @@ void testcase5(void)
                 return;
             }
             */
-        }
-    }
+		}
+	}
 
-    for(i=0;i<TOTAL_INODE_NUM;i++)
-    {
-        if(i%2==1)
-        {
-            GetInode(i,pInode);
-               //vGetInodeValue(i, pTmpInode); 
+	for (i = 0; i < TOTAL_INODE_NUM; i++)
+	{
+		if (i % 2 == 1)
+		{
+			GetInode(i, pInode);
+			//vGetInodeValue(i, pTmpInode);
 
 			/*
            if(pTmpInode->allocBlocks == pInode->allocBlocks
@@ -243,40 +240,40 @@ void testcase5(void)
                 printf("TestCase 5 Fail!\n");
             }
             */
-        }
-    }
-    printf("Testcase 5 Complete!\n");
+		}
+	}
+	printf("Testcase 5 Complete!\n");
 }
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
 	int tcNum;
-	if(argc != 2)
+	if (argc != 2)
 	{
 		perror("Input TestCase Number!");
 		exit(0);
 	}
-	
+
 	tcNum = atoi(argv[1]);
-	
-	switch(tcNum)
+
+	switch (tcNum)
 	{
-		case 1:
-			testcase1();
-			break;
-		case 2:
-			testcase2();
-			break;
-		case 3:
-			testcase3();
-			break;
-		case 4:
-			testcase4();
-			break;
-		case 5:
-			testcase5();
-			break;
+	case 1:
+		testcase1();
+		break;
+	case 2:
+		testcase2();
+		break;
+	case 3:
+		testcase3();
+		break;
+	case 4:
+		testcase4();
+		break;
+	case 5:
+		testcase5();
+		break;
 	}
-	
+
 	return 0;
 }
