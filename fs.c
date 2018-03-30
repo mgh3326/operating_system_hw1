@@ -14,8 +14,8 @@ void FileSysInit(void) //Success
     // {
     //     buf[i] = 0;
     // }
-    memset(buf, 0, sizeof(buf)); // memset을 통해서 모든 메모리를 0으로 만듭니다.
-    for (int i = 0; i < 7; i++)  //1부터 6까지라서
+    memset(buf, 0, BLOCK_SIZE); // memset을 통해서 모든 메모리를 0으로 만듭니다.
+    for (int i = 0; i < 7; i++) //1부터 6까지라서
     {
         DevWriteBlock(i, buf);
     }
@@ -155,9 +155,17 @@ int GetFreeInodeNum(void)
         //         return (i * 8) + (7 - j);
         //     }
         // }
+        // for (int j = 0; j < 8; j++)
+        // {
+        //     if ((buf[i] >> (7 - j) & 1) == 0) // >> 연산자가 & 보다 우선순위가 높구나
+        //     {
+        //         free(buf);
+        //         return (i * 8) + j;
+        //     }
+        // }
         for (int j = 0; j < 8; j++)
         {
-            if ((buf[i] >> (7 - j) & 1) == 0) // >> 연산자가 & 보다 우선순위가 높구나
+            if ((buf[i] << j & 128) == 0) // >> 연산자가 & 보다 우선순위가 높구나
             {
                 free(buf);
                 return (i * 8) + j;
@@ -222,14 +230,14 @@ int GetFreeBlockNum(void)
         //         return (i * 8) + (7 - j);
         //     }
         // }
-        for (int j = 0; j < 8; j++)
-        {
-            if ((buf[i] >> (7 - j) & 1) == 0) // >> 연산자가 & 보다 우선순위가 높구나
-            {
-                free(buf);
-                return (i * 8) + j;
-            }
-        }
+        // for (int j = 0; j < 8; j++)
+        // {
+        //     if ((buf[i] >> (7 - j) & 1) == 0) // >> 연산자가 & 보다 우선순위가 높구나
+        //     {
+        //         free(buf);
+        //         return (i * 8) + j;
+        //     }
+        // }
         for (int j = 0; j < 8; j++)
         {
             if ((buf[i] << j & 128) == 0) // >> 연산자가 & 보다 우선순위가 높구나
