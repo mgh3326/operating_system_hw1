@@ -1,4 +1,4 @@
 make:
-	gcc -o a.out -g *.c validate.o
+	gcc -o HW.out -g *.c validate.o
 clean:
-	rm -f *.o
+	rm -f *.out

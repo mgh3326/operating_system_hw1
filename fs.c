@@ -23,20 +23,9 @@ void FileSysInit(void) //Success
 }
 void SetInodeBitmap(int inodeno)
 {
-    // //DevOpenDisk();
-
     char *buf = malloc(BLOCK_SIZE);
     //DevOpenDisk();
     DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
-    // printf("first : %s\n", buf);
-    // inodeno%8
-    // if(inodeno%8==0){//0일때
-    // buf[inodeno / 8] |= 128;
-    // }
-    // else{
-    // buf[inodeno / 8] |= 128 / ((inodeno % 8)+1);//원래 내꺼
-    int num_inode = inodeno / 8;                  //inode 가 몇번째 배열에 있는지를 나타냅니다.
-    int index_inode = inodeno % 8;                //inode의 index를 가르킵니다.
     buf[inodeno / 8] |= 1 << (7 - (inodeno % 8)); // if(inodeno % 8 ==0) -> buf[inodeno/8] |= 1000000
 
     // printf("second : %s\n", buf);
@@ -49,10 +38,6 @@ void ResetInodeBitmap(int inodeno)
     char *buf = malloc(BLOCK_SIZE);
     //DevOpenDisk();
     DevReadBlock(INODE_BITMAP_BLK_NUM, buf);
-    // printf("first : %s\n", buf);
-    // buf[inodeno / 8] ^= 128 /((inodeno % 8)+1);
-    int num_inode = inodeno / 8;                  //inode 가 몇번째 배열에 있는지를 나타냅니다.
-    int index_inode = inodeno % 8;                //inode의 index를 가르킵니다.
     buf[inodeno / 8] &= ~(1 << (7 - (inodeno % 8)));
 
     // printf("second : %s\n", buf);
@@ -66,12 +51,6 @@ void SetBlockBitmap(int blkno)
     char *buf = malloc(BLOCK_SIZE);
     //DevOpenDisk();
     DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
-    // printf("first : %s\n", buf);
-
-    // buf[blkno / 8] |= 128 / ((blkno % 8)+1);
-    //  buf[blkno / 8] |= 1 << (7 - blkno % 8);
-    int num_inode = blkno / 8;   //inode 가 몇번째 배열에 있는지를 나타냅니다.
-    int index_inode = blkno % 8; //inode의 index를 가르킵니다.
     buf[blkno / 8] |= 1 << (7 - (blkno % 8));
 
     // printf("second : %s\n", buf);
@@ -86,9 +65,6 @@ void ResetBlockBitmap(int blkno)
     char *buf = malloc(BLOCK_SIZE);
     //DevOpenDisk();
     DevReadBlock(BLOCK_BITMAP_BLK_NUM, buf);
-    // printf("first : %d\n", buf[0]);
-    // buf[blkno / 8] ^= 128 / ((blkno % 8)+1);
-    //buf[blkno / 8] &= ~(1 << (7 - blkno % 8));
     int num_inode = blkno / 8;   //inode 가 몇번째 배열에 있는지를 나타냅니다.
     int index_inode = blkno % 8; //inode의 index를 가르킵니다.
     buf[blkno / 8] &= ~(1 << (7 - (blkno % 8)));
