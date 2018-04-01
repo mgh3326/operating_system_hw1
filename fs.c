@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include "fs.h"
 #include "disk.h" //이거 추가하면 될라나
-#include "temp.h" //이거 추가하면 될라나
 #include <stdlib.h>
 #include <string.h>
 void FileSysInit(void) //Success
