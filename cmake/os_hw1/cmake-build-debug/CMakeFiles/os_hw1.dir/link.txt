@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/os_hw1.dir/disk.c.o CMakeFiles/os_hw1.dir/fs.c.o CMakeFiles/os_hw1.dir/testcase.c.o ../validate.o  -o os_hw1 
